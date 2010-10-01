@@ -9,6 +9,8 @@ from collective.transmogrifier.utils import resolvePackageReferenceOrFile
 
 SETTINGS_KEY = "transmogrify.zine.settings"
 ATOM_URL = "http://www.w3.org/2005/Atom"
+CAT_SCHEME = "http://zine.pocoo.org/#category-scheme"
+TAG_SCHEME = "http://zine.pocoo.org/#tag-scheme"
 ATOM_NAMESPACE = "{%s}" % ATOM_URL
 BLOGGER_NAMESPACES = {
     'a': ATOM_URL,
@@ -32,6 +34,7 @@ class ZineSource(object):
         self.name = name
         self.options = options
         self.previous = previous
+        self.blog_url = options['blog_url']
         # custom options for this source
         self.filename = resolvePackageReferenceOrFile(options['filename'])
         self.init_xml_obj(self.filename)
@@ -76,7 +79,7 @@ class ZineSource(object):
             yield item
         # process the blog posts
         posts = self.xml_root.xpath(
-            "a:entry[contains(@xml:base, 'http://www.sixfeetup.com/blog/')]",
+            "a:entry[contains(@xml:base, '%s')]" %(self.blog_url),
         namespaces=BLOGGER_NAMESPACES)
         for post in posts:
             item = {}
@@ -85,6 +88,10 @@ class ZineSource(object):
             item['_transmogrify.zine.content'] = post.content.text
             item['_transmogrify.zine.html'] =\
                     post.xpath("child::*[attribute::type='html']")[0].text
+            item['_transmogrify.zine.category'] = post.xpath(
+                'child::*[attribute::scheme="%s"]/@label' %(CAT_SCHEME))
+            item['_transmogrify.zine.tag'] = post.xpath(
+                'child::*[attribute::scheme="%s"]/@label' %(TAG_SCHEME))
             item['_transmogrify.zine.author.name'] = post.author.name.text
             item['_transmogrify.zine.author.email'] = post.author.email.text
             published = parse(post.published.text)

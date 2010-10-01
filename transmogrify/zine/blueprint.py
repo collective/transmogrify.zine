@@ -38,6 +38,8 @@ class PloneFieldsFC(object):
                     'published' and 'publish' or None
             item['_comments'] = item['_transmogrify.zine.comments']
             item['allow_discussion'] = True
+            item['subject'] = item['_transmogrify.zine.tag'] +\
+                item['_transmogrify.zine.category']
             yield item
 
 
