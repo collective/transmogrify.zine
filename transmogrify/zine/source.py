@@ -56,6 +56,8 @@ class ZineSource(object):
             "z:comment",
             namespaces=BLOGGER_NAMESPACES)
         for comment in comments:
+            if comment.blocked != 'no':
+                continue
             item = {}
             item['id'] = comment.xpath("@id")[0]
             item['text'] = comment.content.text
