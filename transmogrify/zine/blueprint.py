@@ -118,7 +118,11 @@ class CommentsSection(object):
                     # create a reply object
                     comment = CommentFactory()
                     comment.title = title
-                    comment.text = convertHtmlToWebIntelligentPlainText(text)
+                    try:
+                        comment.text = convertHtmlToWebIntelligentPlainText(text)
+                    except UnicodeDecodeError:
+                        print 'Comment import ERROR: %s' %(text)
+                        continue
                     comment.creator = creator
                     # TODO: check if the date is a datetime instance
                     comment.creation_date = creation_date or\
