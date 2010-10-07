@@ -91,9 +91,9 @@ class ZineSource(object):
             item['_transmogrify.zine.html'] =\
                     post.xpath("child::*[attribute::type='html']")[0].text
             item['_transmogrify.zine.category'] = post.xpath(
-                'child::*[attribute::scheme="%s"]/@label' %(CAT_SCHEME))
+                'child::*[attribute::scheme="%s"]/@term' %(CAT_SCHEME))
             item['_transmogrify.zine.tag'] = post.xpath(
-                'child::*[attribute::scheme="%s"]/@label' %(TAG_SCHEME))
+                'child::*[attribute::scheme="%s"]/@term' %(TAG_SCHEME))
             item['_transmogrify.zine.author.name'] = post.author.name.text
             item['_transmogrify.zine.author.email'] = post.author.email.text
             published = parse(post.published.text)

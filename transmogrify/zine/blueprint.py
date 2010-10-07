@@ -38,8 +38,13 @@ class PloneFieldsFC(object):
                     'published' and 'publish' or None
             item['_comments'] = item['_transmogrify.zine.comments']
             item['allow_discussion'] = True
-            item['subject'] = item['_transmogrify.zine.tag'] +\
-                item['_transmogrify.zine.category']
+            tagdict = {}
+            taglist = [term.title() for term in
+                (item['_transmogrify.zine.tag'] +\
+                item['_transmogrify.zine.category'])]
+            for tag in taglist:
+                tagdict[tag] = 1
+            item['subject'] = list(tagdict.keys())
             yield item
 
 
