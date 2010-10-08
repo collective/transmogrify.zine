@@ -30,7 +30,7 @@ class PloneFieldsFC(object):
             item['_path'] = '/blog/%s' %(item['_id'])
             item['_raw_title'] = item['_transmogrify.zine.title']
             item['creators'] = [item['_transmogrify.zine.author.name']]
-            item['effectiveDate'] = item['_transmogrify.zine.updated.rfc822']
+            item['effectiveDate'] = item['_transmogrify.zine.published.rfc822']
             item['modificationDate'] =\
                     item['_transmogrify.zine.updated.rfc822']
             item['creationDate'] = item['_transmogrify.zine.published.rfc822']
