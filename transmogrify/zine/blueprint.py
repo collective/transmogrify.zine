@@ -14,6 +14,16 @@ except ImportError:
 from plone.intelligenttext.transforms import\
         convertHtmlToWebIntelligentPlainText
 
+def title_keep_caps(string):
+    """ Applies the title function but keeps the upper case """
+    result = ''
+    title = string.title()
+    length = len(title)
+    for i in range(length):
+        result+= string[i].isupper() and string[i] or title[i]
+    return result
+
+
 class PloneFieldsFC(object):
     """ This section edits the post's fields to be ready for item creation.
     """
@@ -39,9 +49,9 @@ class PloneFieldsFC(object):
             item['_comments'] = item['_transmogrify.zine.comments']
             item['allow_discussion'] = True
             tagdict = {}
-            taglist = [term.title() for term in
-                (item['_transmogrify.zine.tag'] +\
-                item['_transmogrify.zine.category'])]
+            taglist = [title_keep_caps(term.replace('-',' ')) for\
+                term in (item['_transmogrify.zine.tag'] +\
+                item['_transmogrify.zine.category']) if term]
             for tag in taglist:
                 tagdict[tag] = 1
             item['subject'] = list(tagdict.keys())
@@ -69,6 +79,12 @@ class Format(object):
                         image.replace('src="/',
                         'src="%s' %(self.image_base))
                                        )
+            parasplit = text.split('<p>')
+            if len(parasplit) > 1:
+                first_para = '<p>%s' %(parasplit[1])
+                text = text.replace(first_para, '')
+                item['description'] = convertHtmlToWebIntelligentPlainText(
+                    first_para)
             item['text'] = text
             yield item
 
