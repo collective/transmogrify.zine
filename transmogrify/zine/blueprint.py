@@ -32,6 +32,9 @@ class PloneFieldsFC(object):
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
+        self.name_map = dict([(element.split('|')[0].strip(),
+                        element.split('|')[1].strip())for\
+                        element in options['name_map'].split('\n') if element])
 
     def __iter__(self):
         for item in self.previous:
@@ -39,7 +42,10 @@ class PloneFieldsFC(object):
                 item['_transmogrify.zine.id'].split('/')[-1].replace(':','')
             item['_path'] = '/blog/%s' %(item['_id'])
             item['_raw_title'] = item['_transmogrify.zine.title']
-            item['creators'] = [item['_transmogrify.zine.author.name']]
+            author = item['_transmogrify.zine.author.name']
+            author = self.name_map.get(item['_transmogrify.zine.author.email'],
+                                       item['_transmogrify.zine.author.name'])
+            item['creators'] = [author]
             item['effectiveDate'] = item['_transmogrify.zine.published.rfc822']
             item['modificationDate'] =\
                     item['_transmogrify.zine.updated.rfc822']
