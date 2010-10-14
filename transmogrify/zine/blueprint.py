@@ -88,7 +88,6 @@ class Format(object):
             parasplit = text.split('<p>')
             if len(parasplit) > 1:
                 first_para = '<p>%s' %(parasplit[1])
-                text = text.replace(first_para, '')
                 item['description'] = convertHtmlToWebIntelligentPlainText(
                     first_para)
             item['text'] = text
